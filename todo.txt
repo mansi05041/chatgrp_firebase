@@ -1,0 +1,5 @@
+1. Adding firebase to Android
+2. to IOS
+3. to Web
+
+if firebase.intializeApp() => only work for Android
