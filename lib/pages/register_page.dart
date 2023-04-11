@@ -27,7 +27,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          automaticallyImplyLeading: false,
         ),
         body: _isLoading
             ? Center(
@@ -54,7 +53,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 textStyle: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w400))),
-                        Image.asset("image/people_gossip.jpg"),
+                        CircleAvatar(
+                          radius: 120,
+                          backgroundImage:
+                              AssetImage("image/people_gossip.jpg"),
+                        ),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
                               labelText: "Full Name",
@@ -147,15 +150,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 10,
                         ),
                         Text.rich(TextSpan(
-                          text: "Already have an account?",
+                          text: "Already have an account? ",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 14),
                           children: <TextSpan>[
                             TextSpan(
                                 text: "Login now",
                                 style: const TextStyle(
-                                    color: Colors.black,
-                                    decoration: TextDecoration.underline),
+                                  color: Colors.redAccent,
+                                  decoration: TextDecoration.underline,
+                                ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     nextScreen(context, const LoginPage());
