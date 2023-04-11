@@ -1,5 +1,6 @@
 import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/pages/register_page.dart';
+import 'package:chatgrp_firebase/pages/reset_password.dart';
 import 'package:chatgrp_firebase/service/auth_service.dart';
 import 'package:chatgrp_firebase/service/database_service.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
@@ -29,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
+          automaticallyImplyLeading: false,
         ),
         body: _isLoading
             ? Center(
@@ -41,21 +43,29 @@ class _LoginPageState extends State<LoginPage> {
                   child: Form(
                     key: formKey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        // main heading
                         Text("GOSSIPY",
                             style: GoogleFonts.eczar(
                                 textStyle: const TextStyle(
                                     fontSize: 40,
                                     fontWeight: FontWeight.bold))),
                         const SizedBox(height: 10),
+                        // sub heading
                         Text("Login now to see what they are talking!",
                             style: GoogleFonts.poppins(
                                 textStyle: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w400))),
-                        Image.asset("image/people_discuss.jpg"),
+                        // Image
+                        CircleAvatar(
+                          radius: 80,
+                          backgroundImage:
+                              AssetImage("image/people_discuss.jpg"),
+                        ),
+                        // email
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
                               labelText: "Email",
@@ -80,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 15,
                         ),
+                        // password
                         TextFormField(
                           obscureText: true,
                           decoration: textInputDecoration.copyWith(
@@ -101,9 +112,28 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           },
                         ),
+                        const SizedBox(height: 7),
+                        // forget password option
+                        Text.rich(TextSpan(
+                          text: "Forget Password? ",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: "Reset here!",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    nextScreen(context, ResetPassword());
+                                  }),
+                          ],
+                        )),
                         const SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
+                        // Sign in option
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -120,11 +150,76 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white, fontSize: 16)),
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: const <Widget>[
+                            Expanded(
+                              child: Divider(
+                                height: 2,
+                                color: Colors.grey,
+                                thickness: 1.2,
+                              ),
+                            ),
+                            Text(
+                              'OR',
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                height: 2,
+                                color: Colors.grey,
+                                thickness: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Google Sign in option
+                        const SizedBox(height: 13),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              loginWithGoogle();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'image/google.png',
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  "Connect with Google",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
+                        // Login option
                         Text.rich(TextSpan(
-                          text: "Don't have an account?",
+                          text: "Don't have an account? ",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 14),
                           children: <TextSpan>[
@@ -146,6 +241,25 @@ class _LoginPageState extends State<LoginPage> {
               ));
   }
 
+  // function to login with google Account
+  loginWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await authService.RegisterWithGoogle().then((value) async {
+      if (value == true) {
+        // move to Home page
+        nextScreen(context, HomePage());
+      } else {
+        showSnackbar(context, Colors.redAccent, value);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  // function to login with email and password
   login() async {
     if (formKey.currentState!.validate()) {
       setState(() {
