@@ -1,10 +1,12 @@
 import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
+import 'package:chatgrp_firebase/pages/splashScreen.dart';
 import 'package:chatgrp_firebase/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +61,18 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
-      home: _isSignedIn ? const HomePage() : const LoginPage(),
+      home: AnimatedSplashScreen(
+        splash: Image.asset('image/SplashImg.png'),
+        duration: 1500,
+        splashTransition: SplashTransition.fadeTransition,
+        splashIconSize: 1000,
+        backgroundColor: Colors.black,
+        nextScreen: _isSignedIn ? const HomePage() : const LoginPage(),
+      ),
+      routes: {
+        SplashScreen.routeName: (context) => const SplashScreen(),
+        HomePage.routeName: (context) => const HomePage()
+      },
     );
   }
 }
