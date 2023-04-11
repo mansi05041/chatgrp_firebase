@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   String email = "";
   String password = "";
   bool _isLoading = false;
+  bool passwordVisible = true;
   AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
@@ -102,13 +103,25 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             // password
                             TextFormField(
-                              obscureText: true,
+                              obscureText: passwordVisible,
                               decoration: textInputDecoration.copyWith(
-                                  labelText: "Password",
-                                  prefixIcon: Icon(
-                                    Icons.password,
-                                    color: Theme.of(context).primaryColor,
-                                  )),
+                                labelText: "Password",
+                                prefixIcon: Icon(
+                                  Icons.password,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(passwordVisible
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined),
+                                  onPressed: () {
+                                    setState(() {
+                                      passwordVisible = !passwordVisible;
+                                    });
+                                  },
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
                               validator: (val) {
                                 if (val!.length < 6) {
                                   return "Password must be at least 6 characters";
