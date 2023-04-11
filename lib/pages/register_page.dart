@@ -27,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
+          automaticallyImplyLeading: false,
         ),
         body: _isLoading
             ? Center(
