@@ -68,13 +68,14 @@ class _LoginPageState extends State<LoginPage> {
                                     textStyle: const TextStyle(
                                         fontSize: 40,
                                         fontWeight: FontWeight.bold))),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
                             // sub heading
                             Text("Login now to see what they are talking!",
                                 style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w400))),
+                            const SizedBox(height: 8),
                             // email
                             TextFormField(
                               decoration: textInputDecoration.copyWith(
@@ -132,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                                 TextSpan(
                                     text: "Reset here!",
                                     style: const TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.redAccent,
                                         decoration: TextDecoration.underline),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -238,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                                 TextSpan(
                                     text: "Register here",
                                     style: const TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.redAccent,
                                         decoration: TextDecoration.underline),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
