@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.0.15
   google_fonts: ^3.0.1
   flutter_launcher_icons: ^0.11.0
+  google_sign_in: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -85,8 +86,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - image/people_discuss.jpg
-   - image/people_gossip.jpg
+   - image/
+   
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
