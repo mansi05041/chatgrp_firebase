@@ -21,6 +21,13 @@ class DatabaseService {
     });
   }
 
+  // update the userProfile
+  Future userProfileUpdate(String url) async {
+    return await userCollection.doc(uid).update({
+      "profilePic": url,
+    });
+  }
+
   // getting user data
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =

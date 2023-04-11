@@ -86,9 +86,15 @@ class AuthService {
             await _firebaseFirestore.collection("users").doc(user.uid).get();
         if (!userDoc.exists) {
           // user doesn't exists, create new user
+          final GoogleSignInAccount? currentUser =
+              await _googleSignIn.signInSilently();
           // call our database service to update the user data
           DatabaseService(uid: user.uid)
               .updateUserData(user.displayName ?? "User", user.email!);
+
+          // fetch the google photo url
+          final String? photoUrl = currentUser?.photoUrl;
+          DatabaseService(uid: user.uid).userProfileUpdate(photoUrl!);
         }
         // saving the shared prefernce state
         await HelperFunction.saverUserLoggedInStatus(true);

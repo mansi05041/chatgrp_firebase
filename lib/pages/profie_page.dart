@@ -1,6 +1,7 @@
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
 import 'package:chatgrp_firebase/service/auth_service.dart';
+import 'package:chatgrp_firebase/service/database_service.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,7 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 class ProfilePage extends StatefulWidget {
   String userName;
   String email;
-  ProfilePage({Key? key, required this.email, required this.userName})
+  String photoUrl;
+  ProfilePage(
+      {Key? key,
+      required this.email,
+      required this.userName,
+      required this.photoUrl})
       : super(key: key);
 
   @override
@@ -17,6 +23,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +43,16 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 50),
           children: <Widget>[
-            Icon(
-              Icons.account_circle,
-              size: 150,
-              color: Colors.grey[700],
-            ),
+            widget.photoUrl == ""
+                ? Icon(
+                    Icons.account_circle,
+                    size: 150,
+                    color: Colors.grey[700],
+                  )
+                : CircleAvatar(
+                    radius: 100,
+                    backgroundImage: NetworkImage(widget.photoUrl),
+                  ),
             const SizedBox(height: 15),
             Text(
               widget.userName,
@@ -125,42 +137,67 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(
-              Icons.account_circle,
-              size: 200,
-              color: Colors.grey[700],
-            ),
+            widget.photoUrl == ""
+                ? Icon(
+                    Icons.account_circle,
+                    size: 200,
+                    color: Colors.grey[700],
+                  )
+                : CircleAvatar(
+                    radius: 200,
+                    backgroundImage: NetworkImage(widget.photoUrl),
+                  ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "FullName",
-                  style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(fontSize: 17)),
-                ),
-                Text(
-                  widget.userName,
-                  style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(fontSize: 17)),
-                ),
-              ],
-            ),
-            const Divider(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Email",
-                  style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(fontSize: 17)),
-                ),
-                Text(
-                  widget.email,
-                  style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(fontSize: 17)),
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "FullName",
+                        style: GoogleFonts.roboto(
+                            textStyle: const TextStyle(
+                                fontSize: 17, color: Colors.white)),
+                      ),
+                      Text(
+                        widget.userName,
+                        style: GoogleFonts.roboto(
+                            textStyle: const TextStyle(
+                                fontSize: 17, color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 20,
+                    color: Colors.white,
+                    thickness: 2,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Email",
+                        style: GoogleFonts.roboto(
+                            textStyle: const TextStyle(
+                                fontSize: 17, color: Colors.white)),
+                      ),
+                      Text(
+                        widget.email,
+                        style: GoogleFonts.roboto(
+                            textStyle: const TextStyle(
+                                fontSize: 17, color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

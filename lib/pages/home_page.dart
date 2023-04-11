@@ -6,6 +6,7 @@ import 'package:chatgrp_firebase/service/auth_service.dart';
 import 'package:chatgrp_firebase/service/database_service.dart';
 import 'package:chatgrp_firebase/widgets/group_tile.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   Stream? groups;
   bool _isLoading = false;
   String groupname = "";
+  String photoUrl = "";
+  DatabaseService databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -41,17 +44,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   gettingUserData() async {
+    // getting email
     await HelperFunction.getUserEmailFromSF().then((value) {
       setState(() {
         email = value!;
       });
     });
 
+    // getting userName
     await HelperFunction.getUserNameFromSF().then((val) {
       setState(() {
         userName = val!;
       });
     });
+
+    // fetch the user photoUrl
+    QuerySnapshot ImageSnapshot = await databaseService.gettingUserData(email);
+    if (ImageSnapshot.docs.isNotEmpty) {
+      setState(() {
+        photoUrl = ImageSnapshot.docs.first.get('profilePic');
+      });
+    } else {
+      setState(() {
+        photoUrl = "";
+      });
+    }
 
     // getting the list of snap shot in our screen
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
@@ -89,11 +106,16 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 50),
           children: <Widget>[
-            Icon(
-              Icons.account_circle,
-              size: 150,
-              color: Colors.grey[700],
-            ),
+            photoUrl == ""
+                ? Icon(
+                    Icons.account_circle,
+                    size: 150,
+                    color: Colors.grey[700],
+                  )
+                : CircleAvatar(
+                    radius: 100,
+                    backgroundImage: NetworkImage(photoUrl),
+                  ),
             const SizedBox(height: 15),
             Text(
               userName,
@@ -117,7 +139,12 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               onTap: () {
                 nextScreenReplace(
-                    context, ProfilePage(userName: userName, email: email));
+                    context,
+                    ProfilePage(
+                      userName: userName,
+                      email: email,
+                      photoUrl: photoUrl,
+                    ));
               },
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
