@@ -106,4 +106,19 @@ class AuthService {
       return 'Error in Registering with Google. Try Again';
     }
   }
+
+  // get the user authentication provider
+  Future<String?> authenticationProvider() async {
+    User? user = firebaseAuth.currentUser;
+    if (user != null) {
+      if (user.providerData.any(
+          (element) => element.providerId == GoogleAuthProvider.PROVIDER_ID)) {
+        return "Google";
+      } else if (user.providerData.any(
+          (element) => element.providerId == EmailAuthProvider.PROVIDER_ID)) {
+        return "Email";
+      }
+    }
+    return null;
+  }
 }
