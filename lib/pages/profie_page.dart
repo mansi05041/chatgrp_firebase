@@ -1,5 +1,6 @@
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
+import 'package:chatgrp_firebase/pages/updateScreen.dart';
 import 'package:chatgrp_firebase/service/auth_service.dart';
 import 'package:chatgrp_firebase/service/database_service.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
@@ -38,6 +39,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white, fontSize: 27, fontWeight: FontWeight.bold),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: (() {
+              nextScreen(
+                  context,
+                  UpdateScreen(
+                      email: widget.email,
+                      userName: widget.userName,
+                      photoUrl: widget.photoUrl));
+            }),
+            icon: Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
