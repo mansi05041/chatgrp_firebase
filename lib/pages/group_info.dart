@@ -5,16 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GroupInfo extends StatefulWidget {
+  const GroupInfo({
+    Key? key,
+    required this.adminName,
+    required this.groupName,
+    required this.groupId,
+  }) : super(key: key);
   final String groupId;
   final String groupName;
   final String adminName;
-
-  const GroupInfo(
-      {Key? key,
-      required this.adminName,
-      required this.groupName,
-      required this.groupId})
-      : super(key: key);
 
   @override
   State<GroupInfo> createState() => _GroupInfoState();
@@ -39,11 +38,11 @@ class _GroupInfoState extends State<GroupInfo> {
   }
 
   String getName(String r) {
-    return r.substring(r.indexOf("_") + 1);
+    return r.substring(r.indexOf('_') + 1);
   }
 
   String getId(String res) {
-    return res.substring(0, res.indexOf("_"));
+    return res.substring(0, res.indexOf('_'));
   }
 
   @override
@@ -53,45 +52,50 @@ class _GroupInfoState extends State<GroupInfo> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("Group Info"),
+        title: const Text('Group Info'),
         actions: [
           IconButton(
             onPressed: () {
               showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Exit"),
-                      content: const Text("Are you sure to exit the group?"),
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Exit'),
+                    content: const Text('Are you sure to exit the group?'),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
                         ),
-                        IconButton(
-                          onPressed: () async {
-                            DatabaseService(
-                                    uid: FirebaseAuth.instance.currentUser!.uid)
-                                .toggleGroupJoin(widget.groupId,
-                                    getName(widget.adminName), widget.groupName)
-                                .whenComplete(() {
-                              nextScreen(context, const HomePage());
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.done,
-                            color: Colors.green,
-                          ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          DatabaseService(
+                            uid: FirebaseAuth.instance.currentUser!.uid,
+                          )
+                              .toggleGroupJoin(
+                            widget.groupId,
+                            getName(widget.adminName),
+                            widget.groupName,
+                          )
+                              .whenComplete(() {
+                            nextScreen(context, const HomePage());
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.done,
+                          color: Colors.green,
                         ),
-                      ],
-                    );
-                  });
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(Icons.exit_to_app),
           ),
@@ -104,10 +108,10 @@ class _GroupInfoState extends State<GroupInfo> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Theme.of(context).primaryColor.withOpacity(0.2)),
+                borderRadius: BorderRadius.circular(30),
+                color: Theme.of(context).primaryColor.withOpacity(0.2),
+              ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CircleAvatar(
                     radius: 30,
@@ -115,7 +119,9 @@ class _GroupInfoState extends State<GroupInfo> {
                     child: Text(
                       widget.groupName.substring(0, 1).toUpperCase(),
                       style: const TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.white),
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -123,11 +129,11 @@ class _GroupInfoState extends State<GroupInfo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Group: ${widget.groupName}",
+                        'Group: ${widget.groupName}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 5),
-                      Text("Admin: ${getName(widget.adminName)}"),
+                      Text('Admin: ${getName(widget.adminName)}'),
                     ],
                   ),
                 ],
@@ -140,7 +146,7 @@ class _GroupInfoState extends State<GroupInfo> {
     );
   }
 
-  memberList() {
+  StreamBuilder memberList() {
     return StreamBuilder(
       stream: members,
       builder: (context, AsyncSnapshot snapshot) {
@@ -177,19 +183,20 @@ class _GroupInfoState extends State<GroupInfo> {
               );
             } else {
               return const Center(
-                child: Text("No Members"),
+                child: Text('No Members'),
               );
             }
           } else {
             return const Center(
-              child: Text("No Members"),
+              child: Text('No Members'),
             );
           }
         } else {
           return Center(
-              child: CircularProgressIndicator(
-            color: Theme.of(context).primaryColor,
-          ));
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
         }
       },
     );

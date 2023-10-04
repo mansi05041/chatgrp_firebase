@@ -1,7 +1,7 @@
 import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
-import 'package:chatgrp_firebase/pages/splashScreen.dart';
+import 'package:chatgrp_firebase/pages/splash_screen.dart';
 import 'package:chatgrp_firebase/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
