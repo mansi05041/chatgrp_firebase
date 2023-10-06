@@ -1,7 +1,6 @@
 import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/pages/chat_page.dart';
 import 'package:chatgrp_firebase/service/database_service.dart';
-import 'package:chatgrp_firebase/widgets/group_tile.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,10 +25,10 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    getCurrentUserId_Name();
+    getCurrentUserIdName();
   }
 
-  getCurrentUserId_Name() async {
+  getCurrentUserIdName() async {
     await HelperFunction.getUserNameFromSF().then((value) {
       setState(() {
         userName = value!;

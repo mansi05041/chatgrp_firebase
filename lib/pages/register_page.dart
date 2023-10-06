@@ -20,7 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
   String email = "";
   String password = "";
-  String Fullname = "";
+  String fullname = "";
   bool passwordVisible = true;
   AuthService authService = AuthService();
   @override
@@ -54,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 textStyle: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w400))),
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 120,
                           backgroundImage:
                               AssetImage("image/people_gossip.jpg"),
@@ -68,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               )),
                           onChanged: (val) {
                             setState(() {
-                              Fullname = val;
+                              fullname = val;
                             });
                           },
                           // check the validation
@@ -192,13 +192,13 @@ class _RegisterPageState extends State<RegisterPage> {
         _isLoading = true;
       });
       await authService
-          .registerUserWithEmailAndPassword(Fullname, email, password)
+          .registerUserWithEmailAndPassword(fullname, email, password)
           .then((value) async {
         if (value == true) {
           // saving the shared prefernce state
           await HelperFunction.saverUserLoggedInStatus(true);
           await HelperFunction.saverUserEmailSF(email);
-          await HelperFunction.saverUserNameSF(Fullname);
+          await HelperFunction.saverUserNameSF(fullname);
           nextScreenReplace(context, const HomePage());
         } else {
           showSnackbar(context, Colors.red, value);

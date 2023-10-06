@@ -2,7 +2,6 @@ import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
@@ -13,12 +12,12 @@ class AuthService {
   // login
   Future loginWithUserNameAndPassword(String email, String password) async {
     try {
-      User user = (await firebaseAuth.signInWithEmailAndPassword(
-              email: email, password: password))
+      (await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
           .user!;
-      if (user != null) {
-        return true;
-      }
+      return true;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
@@ -26,15 +25,18 @@ class AuthService {
 
   // register with email and password
   Future registerUserWithEmailAndPassword(
-      String fullName, String email, String password) async {
+    String fullName,
+    String email,
+    String password,
+  ) async {
     try {
-      User user = (await firebaseAuth.createUserWithEmailAndPassword(
-              email: email, password: password))
+      final User user = (await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
           .user!;
-      if (user != null) {
-        await DatabaseService(uid: user.uid).updateUserData(fullName, email);
-        return true;
-      }
+      await DatabaseService(uid: user.uid).updateUserData(fullName, email);
+      return true;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
@@ -44,8 +46,8 @@ class AuthService {
   Future signOut() async {
     try {
       await HelperFunction.saverUserLoggedInStatus(false);
-      await HelperFunction.saverUserEmailSF("");
-      await HelperFunction.saverUserNameSF("");
+      await HelperFunction.saverUserEmailSF('');
+      await HelperFunction.saverUserNameSF('');
       await firebaseAuth.signOut();
     } catch (e) {
       return null;
@@ -69,7 +71,7 @@ class AuthService {
   }
 
   // register with google
-  Future RegisterWithGoogle() async {
+  Future registerWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
@@ -79,18 +81,19 @@ class AuthService {
         accessToken: googleSignInAuthentication?.accessToken,
         idToken: googleSignInAuthentication?.idToken,
       );
-      User? user = (await firebaseAuth.signInWithCredential(credential)).user;
+      final User? user =
+          (await firebaseAuth.signInWithCredential(credential)).user;
       if (user != null) {
         // check if user already exists in database
         final DocumentSnapshot userDoc =
-            await _firebaseFirestore.collection("users").doc(user.uid).get();
+            await _firebaseFirestore.collection('users').doc(user.uid).get();
         if (!userDoc.exists) {
           // user doesn't exists, create new user
           final GoogleSignInAccount? currentUser =
               await _googleSignIn.signInSilently();
           // call our database service to update the user data
           DatabaseService(uid: user.uid)
-              .updateUserData(user.displayName ?? "User", user.email!);
+              .updateUserData(user.displayName ?? 'User', user.email!);
 
           // fetch the google photo url
           final String? photoUrl = currentUser?.photoUrl;
@@ -109,14 +112,16 @@ class AuthService {
 
   // get the user authentication provider
   Future<String?> authenticationProvider() async {
-    User? user = firebaseAuth.currentUser;
+    final User? user = firebaseAuth.currentUser;
     if (user != null) {
       if (user.providerData.any(
-          (element) => element.providerId == GoogleAuthProvider.PROVIDER_ID)) {
-        return "Google";
+        (element) => element.providerId == GoogleAuthProvider.PROVIDER_ID,
+      )) {
+        return 'Google';
       } else if (user.providerData.any(
-          (element) => element.providerId == EmailAuthProvider.PROVIDER_ID)) {
-        return "Email";
+        (element) => element.providerId == EmailAuthProvider.PROVIDER_ID,
+      )) {
+        return 'Email';
       }
     }
     return null;

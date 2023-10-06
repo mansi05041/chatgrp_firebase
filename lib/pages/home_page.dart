@@ -13,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  static const routeName = '\main';
+  static const routeName = 'main';
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -59,10 +59,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     // fetch the user photoUrl
-    QuerySnapshot ImageSnapshot = await databaseService.gettingUserData(email);
-    if (ImageSnapshot.docs.isNotEmpty) {
+    QuerySnapshot imageSnapshot = await databaseService.gettingUserData(email);
+    if (imageSnapshot.docs.isNotEmpty) {
       setState(() {
-        photoUrl = ImageSnapshot.docs.first.get('profilePic');
+        photoUrl = imageSnapshot.docs.first.get('profilePic');
       });
     } else {
       setState(() {
