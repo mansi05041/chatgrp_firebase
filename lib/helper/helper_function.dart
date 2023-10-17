@@ -1,4 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:chatgrp_firebase/helper/shared_prefs.dart';
 
 class HelperFunction {
   // keys
@@ -7,34 +7,28 @@ class HelperFunction {
   static String userEmailKey = 'USEREMAILKEY';
 
   // saving the data to SF
-  static Future<bool> saverUserLoggedInStatus(bool isUserLoggedIn) async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return await sf.setBool(userLoggedInKey, isUserLoggedIn);
+  static saverUserLoggedInStatus(bool isUserLoggedIn) {
+    SharedPrefs.setData(userLoggedInKey, isUserLoggedIn);
   }
 
-  static Future<bool> saverUserNameSF(String userName) async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return await sf.setString(userNameKey, userName);
+  static saverUserNameSF(String userName) {
+    SharedPrefs.setData(userNameKey, userName);
   }
 
-  static Future<bool> saverUserEmailSF(String userEmail) async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return await sf.setString(userEmailKey, userEmail);
+  static saverUserEmailSF(String userEmail) async {
+    SharedPrefs.setData(userEmailKey, userEmail);
   }
 
   // getting the data from SF
   static Future<bool?> getUserLoggedInStatus() async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return sf.getBool(userLoggedInKey);
+    return await SharedPrefs.getData(userLoggedInKey, bool);
   }
 
   static Future<String?> getUserEmailFromSF() async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return sf.getString(userEmailKey);
+    return await SharedPrefs.getData(userEmailKey, String);
   }
 
   static Future<String?> getUserNameFromSF() async {
-    final SharedPreferences sf = await SharedPreferences.getInstance();
-    return sf.getString(userNameKey);
+    return await SharedPrefs.getData(userNameKey, String);
   }
 }
