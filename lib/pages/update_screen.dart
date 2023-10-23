@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:chatgrp_firebase/helper/helper_function.dart';
+import 'package:chatgrp_firebase/helper/validator.dart';
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/reset_password.dart';
 import 'package:chatgrp_firebase/service/auth_service.dart';
@@ -63,17 +64,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 });
                 // pick the image
                 final ImagePicker imagePicker = ImagePicker();
-                final XFile? file =
-                    await imagePicker.pickImage(source: ImageSource.camera);
+                final XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
                 if (file != null) {
-                  final String uniqueFileName =
-                      DateTime.now().microsecondsSinceEpoch.toString();
+                  final String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
                   // store into Firebase Storage
-                  final Reference referenceRoot =
-                      FirebaseStorage.instance.ref();
+                  final Reference referenceRoot = FirebaseStorage.instance.ref();
                   final Reference imageRef = referenceRoot.child('images');
-                  final Reference referenceImageToUpload =
-                      imageRef.child(uniqueFileName);
+                  final Reference referenceImageToUpload = imageRef.child(uniqueFileName);
                   try {
                     // upload the image into Firebase Storage
                     await referenceImageToUpload.putFile(File(file.path));
@@ -82,12 +79,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         updatePhotoUrl = value;
                       });
                     });
-                    final userPhotoSnapShot =
-                        await databaseService.gettingUserData(widget.email);
+                    final userPhotoSnapShot = await databaseService.gettingUserData(widget.email);
                     if (userPhotoSnapShot.docs.isNotEmpty) {
                       final userDocument = userPhotoSnapShot.docs.first;
-                      await userDocument.reference
-                          .update({'profilePic': updatePhotoUrl});
+                      await userDocument.reference.update({'profilePic': updatePhotoUrl});
                     }
                     setState(() {
                       _isPhotoLoading = false;
@@ -121,17 +116,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 });
                 // pick the image
                 final ImagePicker imagePicker = ImagePicker();
-                final XFile? file =
-                    await imagePicker.pickImage(source: ImageSource.gallery);
+                final XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
                 if (file != null) {
-                  final String uniqueFileName =
-                      DateTime.now().microsecondsSinceEpoch.toString();
+                  final String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
                   // store into Firebase Storage
-                  final Reference referenceRoot =
-                      FirebaseStorage.instance.ref();
+                  final Reference referenceRoot = FirebaseStorage.instance.ref();
                   final Reference imageRef = referenceRoot.child('images');
-                  final Reference referenceImageToUpload =
-                      imageRef.child(uniqueFileName);
+                  final Reference referenceImageToUpload = imageRef.child(uniqueFileName);
                   try {
                     // upload the image into Firebase Storage
                     await referenceImageToUpload.putFile(File(file.path));
@@ -140,12 +131,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         updatePhotoUrl = value;
                       });
                     });
-                    final userPhotoSnapShot =
-                        await databaseService.gettingUserData(widget.email);
+                    final userPhotoSnapShot = await databaseService.gettingUserData(widget.email);
                     if (userPhotoSnapShot.docs.isNotEmpty) {
                       final userDocument = userPhotoSnapShot.docs.first;
-                      await userDocument.reference
-                          .update({'profilePic': updatePhotoUrl});
+                      await userDocument.reference.update({'profilePic': updatePhotoUrl});
                     }
                     setState(() {
                       _isPhotoLoading = false;
@@ -183,9 +172,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                     final Uri uri = Uri.parse(widget.photoUrl);
                     final String path = uri.path;
                     final String fileName = path.split('/').last;
-                    final Reference ref = FirebaseStorage.instance
-                        .ref()
-                        .child('images/$fileName');
+                    final Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
                     try {
                       await ref.delete();
                       setState(() {
@@ -203,12 +190,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   setState(() {
                     widget.photoUrl = '';
                   });
-                  final userPhotoSnapShot =
-                      await databaseService.gettingUserData(widget.email);
+                  final userPhotoSnapShot = await databaseService.gettingUserData(widget.email);
                   if (userPhotoSnapShot.docs.isNotEmpty) {
                     final userDocument = userPhotoSnapShot.docs.first;
-                    await userDocument.reference
-                        .update({'profilePic': widget.photoUrl});
+                    await userDocument.reference.update({'profilePic': widget.photoUrl});
                   }
                   setState(() {
                     _isPhotoLoading = false;
@@ -376,8 +361,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   updateName = val;
                 });
                 // update value in firebase
-                final userDataSnapShot =
-                    await databaseService.gettingUserData(widget.email);
+                final userDataSnapShot = await databaseService.gettingUserData(widget.email);
                 if (userDataSnapShot.docs.isNotEmpty) {
                   final userDocument = userDataSnapShot.docs.first;
                   await userDocument.reference.update({'fullName': updateName});
@@ -401,13 +385,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
             TextFormField(
               enabled: false,
               // check the validation
-              validator: (val) {
-                return RegExp(
-                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                ).hasMatch(val!)
-                    ? null
-                    : 'Please enter a valid email';
-              },
+              validator: (val) => val!.isValidEmail() ? null : 'Please enter a valid email',
               decoration: InputDecoration(
                 hintText: widget.email,
                 prefixIcon: Icon(

@@ -1,3 +1,4 @@
+import 'package:chatgrp_firebase/helper/validator.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
 import 'package:chatgrp_firebase/service/auth_service.dart';
 import 'package:chatgrp_firebase/widgets/widget.dart';
@@ -30,8 +31,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             )
           : SingleChildScrollView(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
                 child: Form(
                   key: formkey,
                   child: Column(
@@ -48,27 +48,20 @@ class _ResetPasswordState extends State<ResetPassword> {
                       const SizedBox(height: 10),
                       // Email
                       TextFormField(
-                        decoration: textInputDecoration.copyWith(
-                          labelText: 'Email',
-                          prefixIcon: Icon(
-                            Icons.email,
-                            color: Theme.of(context).primaryColor,
+                          decoration: textInputDecoration.copyWith(
+                            labelText: 'Email',
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
-                        ),
-                        onChanged: (val) {
-                          setState(() {
-                            email = val;
-                          });
-                        },
-                        // check the validation
-                        validator: (val) {
-                          return RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                          ).hasMatch(val!)
-                              ? null
-                              : 'Please enter a valid email';
-                        },
-                      ),
+                          onChanged: (val) {
+                            setState(() {
+                              email = val;
+                            });
+                          },
+                          // check the validation
+                          validator: (val) => val!.isValidEmail() ? null : 'Please enter a valid email'),
                       const SizedBox(height: 15),
                       SizedBox(
                         width: double.infinity,

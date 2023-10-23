@@ -1,3 +1,4 @@
+import 'package:chatgrp_firebase/helper/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:chatgrp_firebase/helper/helper_function.dart';
 import 'package:chatgrp_firebase/pages/login_page.dart';
@@ -30,34 +31,22 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor))
+            ? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor))
             : SingleChildScrollView(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
                   child: Form(
                     key: formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text("GOSSIPY",
-                            style: GoogleFonts.eczar(
-                                textStyle: const TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold))),
+                        Text("GOSSIPY", style: GoogleFonts.eczar(textStyle: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold))),
                         const SizedBox(height: 10),
-                        Text("Create your account now  to chat and explore!",
-                            style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400))),
+                        Text("Create your account now  to chat and explore!", style: GoogleFonts.poppins(textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400))),
                         const CircleAvatar(
                           radius: 120,
-                          backgroundImage:
-                              AssetImage("image/people_gossip.jpg"),
+                          backgroundImage: AssetImage("image/people_gossip.jpg"),
                         ),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
@@ -84,26 +73,19 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 15,
                         ),
                         TextFormField(
-                          decoration: textInputDecoration.copyWith(
-                              labelText: "Email",
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Theme.of(context).primaryColor,
-                              )),
-                          onChanged: (val) {
-                            setState(() {
-                              email = val;
-                            });
-                          },
-                          // check the validation
-                          validator: (val) {
-                            return RegExp(
-                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(val!)
-                                ? null
-                                : "Please enter a valid email";
-                          },
-                        ),
+                            decoration: textInputDecoration.copyWith(
+                                labelText: "Email",
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: Theme.of(context).primaryColor,
+                                )),
+                            onChanged: (val) {
+                              setState(() {
+                                email = val;
+                              });
+                            },
+                            // check the validation
+                            validator: (val) => val!.isValidEmail() ? null : "Please enter a valid email"),
                         const SizedBox(
                           height: 15,
                         ),
@@ -116,9 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               color: Theme.of(context).primaryColor,
                             ),
                             suffixIcon: IconButton(
-                              icon: Icon(passwordVisible
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined),
+                              icon: Icon(passwordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined),
                               onPressed: () {
                                 setState(() {
                                   passwordVisible = !passwordVisible;
@@ -146,17 +126,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).primaryColor,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30))),
+                            style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
                             onPressed: () {
                               register();
                             },
-                            child: const Text("Register",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16)),
+                            child: const Text("Register", style: TextStyle(color: Colors.white, fontSize: 16)),
                           ),
                         ),
                         const SizedBox(
@@ -164,8 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         Text.rich(TextSpan(
                           text: "Already have an account? ",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 14),
+                          style: const TextStyle(color: Colors.black, fontSize: 14),
                           children: <TextSpan>[
                             TextSpan(
                                 text: "Login now",
@@ -191,9 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _isLoading = true;
       });
-      await authService
-          .registerUserWithEmailAndPassword(fullname, email, password)
-          .then((value) async {
+      await authService.registerUserWithEmailAndPassword(fullname, email, password).then((value) async {
         if (value == true) {
           // saving the shared prefernce state
           await HelperFunction.saverUserLoggedInStatus(true);

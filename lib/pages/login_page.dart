@@ -1,4 +1,5 @@
 import 'package:chatgrp_firebase/helper/helper_function.dart';
+import 'package:chatgrp_firebase/helper/validator.dart';
 import 'package:chatgrp_firebase/pages/home_page.dart';
 import 'package:chatgrp_firebase/pages/register_page.dart';
 import 'package:chatgrp_firebase/pages/reset_password.dart';
@@ -87,27 +88,20 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 8),
                           // email
                           TextFormField(
-                            decoration: textInputDecoration.copyWith(
-                              labelText: 'Email',
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Theme.of(context).primaryColor,
+                              decoration: textInputDecoration.copyWith(
+                                labelText: 'Email',
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                email = val;
-                              });
-                            },
-                            // check the validation
-                            validator: (val) {
-                              return RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                              ).hasMatch(val!)
-                                  ? null
-                                  : 'Please enter a valid email';
-                            },
-                          ),
+                              onChanged: (val) {
+                                setState(() {
+                                  email = val;
+                                });
+                              },
+                              // check the validation
+                              validator: (val) => val!.isValidEmail() ? null : 'Please enter a valid email'),
                           const SizedBox(
                             height: 15,
                           ),
@@ -122,9 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  passwordVisible
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
+                                  passwordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -134,13 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
-                            validator: (val) {
-                              if (val!.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              } else {
-                                return null;
-                              }
-                            },
+                            validator: (val) => val!.isValidField(6) ? null : 'Password must be at least 6 characters',
                             onChanged: (val) {
                               setState(() {
                                 password = val;
@@ -323,13 +309,9 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = true;
       });
-      await authService
-          .loginWithUserNameAndPassword(email, password)
-          .then((value) async {
+      await authService.loginWithUserNameAndPassword(email, password).then((value) async {
         if (value == true) {
-          final QuerySnapshot snapshot =
-              await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-                  .gettingUserData(email);
+          final QuerySnapshot snapshot = await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).gettingUserData(email);
           // saving the values to shared preference
           await HelperFunction.saverUserLoggedInStatus(true);
           await HelperFunction.saverUserEmailSF(email);
