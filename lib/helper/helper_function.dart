@@ -1,4 +1,4 @@
-import 'package:chatgrp_firebase/helper/shared_prefs.dart';
+import 'shared_prefs.dart';
 
 class HelperFunction {
   // keys
